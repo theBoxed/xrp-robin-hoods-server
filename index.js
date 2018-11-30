@@ -5,7 +5,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const app = express();
 const { PORT, CLIENT_ORIGIN } = require('./config');
-const { dbConnect } = require('./db');
+const { dbConnect } = require('./utils/db');
 
 const tipsRouter = require('./routes/tips');
 const leaderBoardRouter = require('./routes/leaderboard');

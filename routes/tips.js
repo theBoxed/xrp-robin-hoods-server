@@ -1,9 +1,5 @@
 'use strict';
 
-// TODO: Fix TotalResults() to handle dates
-// TODO: Fix newTipperResults() to handle dates
-// TODO: Add comments for the functions
-
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -43,7 +39,6 @@ function totalPromise(firstDay, lastDay) {
     },
     { $project: { _id: 0 } }
   ]).then(result => {
-    console.log('Total Promise ' + result);
     if (!result) {
       const err = new Error('Results Not Found');
       err.status = 400;

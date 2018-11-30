@@ -17,6 +17,7 @@
     "mongoose": "^5.3.8",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.5",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
   }
 }

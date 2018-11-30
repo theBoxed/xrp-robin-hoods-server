@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const { MONGODB_URI } = require('./config');
+const { MONGODB_URI } = require('../config');
 
 function dbConnect(url = MONGODB_URI) {
   return mongoose.connect(url).catch(err => {
