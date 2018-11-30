@@ -1,0 +1,21 @@
+{
+  "name": "xrptipbot",
+  "version": "0.0.1",
+  "description": "## Introduction",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "moment": "^2.22.2",
+    "mongoose": "^5.3.8",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.5",
+    "request": "^2.88.0"
+  }
+}
