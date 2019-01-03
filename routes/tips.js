@@ -2,6 +2,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
+const momentJs = require('moment');
 
 //Mongo Collections
 const Tips = require('../models/tips');
@@ -67,7 +68,7 @@ function tipsPromise(period) {
       $group: {
         _id: '$moment',
         countValue: { $sum: 1 },
-        sumValue: { $sum: '$xrp' },
+        sumValue: { $sum: '$xrp' }
       }
     },
     {
@@ -104,7 +105,6 @@ function totalUsersPromise(userType, firstDay, lastDay) {
 }
 
 function newUsersPromise(userType, firstDay, lastDay) {
-
   return Tips.aggregate([
     {
       $sort: {
@@ -121,27 +121,31 @@ function newUsersPromise(userType, firstDay, lastDay) {
         }
       }
     },
-    { $project: {
-      _id: false,
-      username: '$_id.user',
-      firstTip: true,
-      count: {
-        "$cond": [
-          {
-            '$and': [
-              { $lte: ['$firstTip', new Date(lastDay)]},
-              { $gte: ['$firstTip', new Date(firstDay)]}
-            ]
-          },
-          1, 0 ]
-          }
+    {
+      $project: {
+        _id: false,
+        username: '$_id.user',
+        firstTip: true,
+        count: {
+          $cond: [
+            {
+              $and: [
+                { $lte: ['$firstTip', new Date(lastDay)] },
+                { $gte: ['$firstTip', new Date(firstDay)] }
+              ]
+            },
+            1,
+            0
+          ]
+        }
       }
-    }, {
-    $group: {
-      _id: null,
-      count: { $sum: '$count'}
+    },
+    {
+      $group: {
+        _id: null,
+        count: { $sum: '$count' }
+      }
     }
-  }
   ]).then(result => {
     if (!result) {
       const err = new Error('Results Not Found');
@@ -154,7 +158,6 @@ function newUsersPromise(userType, firstDay, lastDay) {
 }
 
 function newRecipientsPromise(userType, firstDay, lastDay) {
-
   return Tips.aggregate([
     {
       $sort: {
@@ -177,17 +180,20 @@ function newRecipientsPromise(userType, firstDay, lastDay) {
         username: '$_id.user',
         firstTip: true,
         count: {
-          "$cond": [
+          $cond: [
             {
-              '$and': [
+              $and: [
                 { $lte: ['$firstTip', new Date(lastDay)] },
                 { $gte: ['$firstTip', new Date(firstDay)] }
               ]
             },
-            1, 0]
+            1,
+            0
+          ]
         }
       }
-    }, {
+    },
+    {
       $group: {
         _id: null,
         count: { $sum: '$count' }
@@ -204,19 +210,16 @@ function newRecipientsPromise(userType, firstDay, lastDay) {
   });
 }
 
-
-
-
 router.get('/', (req, res, next) => {
   const { period } = req.query;
   const userType = !req.query.userType ? 'user' : req.query.userType;
-  let curr = new Date();
-  let first = curr.getDate() - curr.getDay() - 7;
-  let last = first + 6;
+  const today = momentJs();
   let firstDay, lastDay;
   if (period === 'week') {
-    firstDay = new Date(curr.setDate(first)).toISOString();
-    lastDay = new Date(curr.setDate(last)).toISOString();
+    firstDay = today.startOf('week').toDate();
+    console.log('1st Today => ' + firstDay);
+    lastDay = today.endOf('week').toDate();
+    console.log('1st Today => ' + lastDay);
   } else if (period === 'all') {
     firstDay = new Date(2017, 0, 1, 0, 0).toISOString();
     lastDay = new Date();
@@ -227,7 +230,7 @@ router.get('/', (req, res, next) => {
     tipsPromise(period),
     totalUsersPromise('user', firstDay, lastDay),
     totalUsersPromise('to', firstDay, lastDay),
-    newUsersPromise( 'user', firstDay, lastDay),
+    newUsersPromise('user', firstDay, lastDay),
     newRecipientsPromise('to', firstDay, lastDay)
   ])
     .then(

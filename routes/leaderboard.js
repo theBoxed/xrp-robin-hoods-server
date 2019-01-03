@@ -5,13 +5,13 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
+const momentJs = require('moment');
 
 //Mongo Collections
 const Tips = require('../models/tips');
 const Withdraws = require('../models/withdraws');
 const Deposits = require('../models/deposits');
 const router = express.Router();
-
 
 function tipsSentLeadersPromise(firstDay, lastDay) {
   return Tips.aggregate([
@@ -51,7 +51,7 @@ function tipsSentLeadersPromise(firstDay, lastDay) {
       }
     }
   ]).then(results => {
-    console.log('Tip Sent Leader Promise' + JSON.stringify(results));
+    // console.log('Tip Sent Leader Promise' + JSON.stringify(results));
     if (!results) {
       const err = new Error('Results Not Found');
       err.status = 400;
@@ -100,7 +100,7 @@ function xrpSentLeadersPromise(firstDay, lastDay) {
       }
     }
   ]).then(results => {
-    console.log('Tip Sent Leader Promise' + results);
+    // console.log('Tip Sent Leader Promise' + results);
     if (!results) {
       const err = new Error('Results Not Found');
       err.status = 400;
@@ -149,7 +149,7 @@ function tipsReceivedLeadersPromise(firstDay, lastDay) {
       }
     }
   ]).then(results => {
-    console.log('Tip Sent Leader Promise' + JSON.stringify(results));
+    // console.log('Tip Sent Leader Promise' + JSON.stringify(results));
     if (!results) {
       const err = new Error('Results Not Found');
       err.status = 400;
@@ -198,7 +198,7 @@ function xrpReceivedLeadersPromise(firstDay, lastDay) {
       }
     }
   ]).then(results => {
-    console.log('Tip Sent Leader Promise' + results);
+    // console.log('Tip Sent Leader Promise' + results);
     if (!results) {
       const err = new Error('Results Not Found');
       err.status = 400;
@@ -211,13 +211,13 @@ function xrpReceivedLeadersPromise(firstDay, lastDay) {
 
 router.get('/', (req, res, next) => {
   const { period } = req.query;
-  let curr = new Date();
-  let first = curr.getDate() - curr.getDay() - 7;
-  let last = first + 6;
+  const today = momentJs();
   let firstDay, lastDay;
   if (period === 'week') {
-    firstDay = new Date(curr.setDate(first)).toISOString();
-    lastDay = new Date(curr.setDate(last)).toISOString();
+    firstDay = today.startOf('week').toDate();
+    console.log('1st Today => ' + firstDay);
+    lastDay = today.endOf('week').toDate();
+    console.log('1st Today => ' + lastDay);
   } else if (period === 'all') {
     firstDay = new Date(2017, 0, 1, 0, 0).toISOString();
     lastDay = new Date();

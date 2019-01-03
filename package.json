@@ -4,7 +4,7 @@
   "description": "## Introduction",
   "main": "index.js",
   "scripts": {
-    		"test": "cross-env NODE_ENV=test mocha",
+    "test": "cross-env NODE_ENV=test mocha",
     "start": "nodemon server.js"
   },
   "author": "",
@@ -13,7 +13,7 @@
     "cors": "^2.8.5",
     "event-stream": "^3.3.4",
     "express": "^4.16.4",
-    "moment": "^2.22.2",
+    "moment": "^2.23.0",
     "mongoose": "^5.3.8",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.5",
